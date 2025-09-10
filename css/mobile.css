@@ -1,0 +1,12 @@
+.mobile-theme a{text-decoration:underline}
+.mobile-theme p{line-height:1.75em}
+.mobile-theme .entry-title,.mobile-theme .entry-title a{text-decoration:underline}
+.mobile-theme .widget ul{list-style:initial;margin-left:2.5em;line-height: 2em}
+.mobile-theme #execphp-2{display:none}
+.mobile-theme #page,.mobile-theme #branding{margin:.5em}
+.mobile-theme #branding{display:none}
+.mobile-theme .spoiler-head{border-bottom:1px dashed;display:inline;color:#278dbc}
+.mobile-theme .unfolded{display:none}
+.mobile-theme blockquote{border-left:2px solid #ccc;padding-left:1em;margin-left:.5em}
+.mobile-theme #respond .comment-form-url{display:none}
+.mobile-theme img.latex{vertical-align:middle}

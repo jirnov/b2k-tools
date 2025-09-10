@@ -1,0 +1,28 @@
+.spoiler-head {
+    color: #cc6633;
+    display:inline;
+    border-bottom: 1px dashed;
+    cursor:pointer;
+}
+
+.spoiler-head.folded:before {
+    content: '\25B6';
+    margin-right: 5px;
+}
+
+.spoiler-head.unfolded:before {
+    margin-right: 5px;
+    content: '\25BC';
+}
+
+.spoiler-body.folded {
+    display: none;
+}
+
+.spoiler-body.unfolded {
+    display: block;
+}
+
+.spoiler-wrap {
+    margin-bottom: 0.5em;
+}

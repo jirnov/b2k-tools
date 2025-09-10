@@ -1,0 +1,10 @@
+.spoiler-head.folded,
+.spoiler-head.unfolded {
+    display: none;
+}
+
+.spoiler-body.folded,
+.spoiler-body.unfolded {
+    display: block;
+}
+
