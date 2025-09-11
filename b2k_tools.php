@@ -18,59 +18,6 @@ if ( !defined('B2K_DIRECTORY') ){
   define('B2K_DIRECTORY', dirname(__FILE__));
 }
 
-function b2k_rus_to_lat($title) {
-  $title = strip_tags($title);
-  $title = remove_accents($title);
-
-  $translit = array(
-    'а'=>'a','б'=>'b','в'=>'v','г'=>'g','д'=>'d','е'=>'e','ё'=>'yo','ж'=>'zh',
-    'з'=>'z','и'=>'i','й'=>'y','к'=>'k','л'=>'l','м'=>'m','н'=>'n','о'=>'o',
-    'п'=>'p','р'=>'r','с'=>'s','т'=>'t','у'=>'u','ф'=>'f','х'=>'h','ц'=>'ts',
-    'ч'=>'ch','ш'=>'sh','щ'=>'shch','ъ'=>'','ы'=>'y','ь'=>'','э'=>'e','ю'=>'yu',
-    'я'=>'ya',' '=>'-','_'=>'-'
-  );
-
-  $title = strtr($title, $translit);
-  $title = preg_replace('/[^a-zA-Z0-9\-]/', '', $title);
-  $title = preg_replace('/-+/', '-', $title);
-  $title = strtolower(trim($title, '-'));
-
-  return $title;
-}
-
-
-function b2k_change_post_link($post_link, $id=0) {
-  $post = get_post($id);
-
-  if ($post->post_type == 'post') {
-    if (is_object($post)) {
-      return '/blog/'.$post_link;
-    }
-  }
-  return $post_link;
-}
-#add_filter('post_link', 'b2k_change_post_link', 1, 3);
-#
-#
-
-
-function b2k_turbo_content($content) {
-  $content = str_replace(
-    array('<strike>', '</strike>'),
-    array('<del>', '</del>'),
-    $content);
-
-  $content = preg_replace_callback(
-    '#(<pre.*?>)(.*?)(</pre>)#imsu',
-    function($m) {
-      return $m[1].esc_html($m[2]).$m[3];
-    },
-    $content);
-
-  return $content;
-};
-add_filter('yturbo_the_content', 'b2k_turbo_content');
-
 add_filter('xmlrpc_enabled', '__return_false');
 
 remove_action('wp_head', 'rsd_link');
@@ -192,12 +139,9 @@ function b2k_enqueue_scripts() {
 }
 add_action('wp_enqueue_scripts', 'b2k_enqueue_scripts');
 
-
-
-
 add_filter('jetpack_implode_frontend_css', '__return_false');
 
-
+// Добавление ссылки Поделиться с помощью social_likes
 function b2k_social_likes($content='') {
   global $post;
 
@@ -230,7 +174,7 @@ function b2k_social_likes($content='') {
 }
 add_filter('the_content', 'b2k_social_likes');
 
-
+// Добавление ссылок rel next, rel prev
 function b2k_rel_next_prev() {
   global $paged;
   $next_link = "";
@@ -269,7 +213,7 @@ add_action('wp_head', 'b2k_rel_next_prev');
 
 add_filter('paginate_links', 'b2k_remove_args');
 
-
+// Если поиском нашёлся один пост, то сразу открываем его, вместо поисковой страницы
 function b2k_redirect_single_post() {
   if (is_search() && !is_paged()) {
     global $wp_query;
@@ -292,7 +236,7 @@ function b2k_disable_author_page() {
 }
 add_action('template_redirect', 'b2k_disable_author_page');
 
-
+// Открываем все ссылки в новом окне
 function b2k_target_blank($content) {
   $content = preg_replace_callback(       
     '/<a[^>]*href=^#["|\']([^"|\']*)["|\'][^>]*>([^<]*)<\/a>/i',
@@ -308,7 +252,7 @@ function b2k_target_blank($content) {
 }
 add_filter('the_content', 'b2k_target_blank');
 
-
+// Добавляем всем ссылкам, кроме избранных, параметр nofollow
 function b2k_nofollow_links($content) {
   $content = preg_replace_callback(       
     '/<a[^>]*href=["|\']([^"|\']*)["|\'][^>]*>([^<]*)<\/a>/i',
@@ -348,9 +292,9 @@ function b2k_nofollow_links($content) {
 
   return $content;
 }
-// add_filter('the_content', 'b2k_nofollow_links');
+add_filter('the_content', 'b2k_nofollow_links');
 
-
+// Добавляем meta теги для верификации в разных сервисах
 function b2k_meta_verify() {
   if (!is_front_page()) {
     return;
