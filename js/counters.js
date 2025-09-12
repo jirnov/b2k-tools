@@ -56,6 +56,16 @@ function notifyShare(service, location, title) {
   });
 }
 
+function notifyComments(location) {
+  gtag('event', 'comment', {
+    'location' : location
+  });
+  ym(91531653, 'reachGoal', 'comment-focus', {
+    'location':location
+  });
+}
+
+
 function notifyMenu(location, action) {
   gtag('event', 'menu', {
     'location' : location,
@@ -75,6 +85,9 @@ jQuery(window).load(function() {
     var location = parent.attr('data-url');
     var title = parent.attr('data-title');
     notifyShare(service, location, title);
+  });
+  jQuery('#comment').focus(function() {
+    notifyComments(document.location.href);
   });
 });    
 
