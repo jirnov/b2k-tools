@@ -56,12 +56,14 @@ function notifyShare(service, location, title) {
   });
 }
 
-function notifyComments(location) {
+function notifyComments(location, action) {
   gtag('event', 'comment', {
-    'location' : location
+    'location' : location,
+    'action' : action
   });
   ym(91531653, 'reachGoal', 'comment-focus', {
-    'location':location
+    'location':location,
+    'action' : action
   });
 }
 
@@ -87,7 +89,13 @@ jQuery(window).load(function() {
     notifyShare(service, location, title);
   });
   jQuery('#comment').focus(function() {
-    notifyComments(document.location.href);
+    notifyComments(document.location.href, 'comment-area');
+  });
+  jQuery('#author').focus(fucntion() {
+    notifyComments(document.location.href, 'comment-author');
+  });
+  jQuery('#email').focus(fucntion() {
+    notifyComments(document.location.href, 'comment-email');
   });
 });    
 
