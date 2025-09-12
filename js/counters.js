@@ -79,7 +79,7 @@ function notifyMenu(location, action) {
   });
 }
 
-jQuery(window).load(function() {
+jQuery(window).on('load', function() {
   jQuery('.social-likes__icon').css('pointer-events', 'none');
   jQuery('.social-likes__widget').click(function(e) {
     var service = jQuery(e.target).attr('data-service');

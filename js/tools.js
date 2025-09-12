@@ -1,4 +1,4 @@
-jQuery(window).load(function() {
+jQuery(window).on('load', function() {
   jQuery('.widget-body a.current-page').click(function(event) {
     event.preventDefault();
 
