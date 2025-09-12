@@ -91,10 +91,10 @@ jQuery(window).load(function() {
   jQuery('#comment').focus(function() {
     notifyComments(document.location.href, 'comment-area');
   });
-  jQuery('#author').focus(fucntion() {
+  jQuery('#author').focus(function() {
     notifyComments(document.location.href, 'comment-author');
   });
-  jQuery('#email').focus(fucntion() {
+  jQuery('#email').focus(function() {
     notifyComments(document.location.href, 'comment-email');
   });
 });    
