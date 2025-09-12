@@ -43,38 +43,20 @@ jQuery(document).ready(function($) {
   $.getScript('//top-fwz1.mail.ru/js/code.js');
 });
 
-function notifyShare(service, location, title) {
+function notifyShare(service) {
   gtag('event', 'share', { 
-    'service' : service, 
-    'location' : location,
-    'title' : title
+    'service' : service 
   });
   ym(91531653, 'reachGoal', 'share', {
-    'service': service,
-    'location' : location,
-    'title' : title
+    'service': service
   });
 }
 
-function notifyComments(location, action) {
+function notifyComments(action) {
   gtag('event', 'comment', {
-    'location' : location,
     'action' : action
   });
   ym(91531653, 'reachGoal', 'comment-focus', {
-    'location':location,
-    'action' : action
-  });
-}
-
-
-function notifyMenu(location, action) {
-  gtag('event', 'menu', {
-    'location' : location,
-    'action' : action
-  });
-  ym(91531653, 'reachGoal', 'menu', {
-    'location' : location,
     'action' : action
   });
 }
@@ -83,19 +65,16 @@ jQuery(window).on('load', function() {
   jQuery('.social-likes__icon').css('pointer-events', 'none');
   jQuery('.social-likes__widget').click(function(e) {
     var service = jQuery(e.target).attr('data-service');
-    var parent = jQuery(e.target).parent();
-    var location = parent.attr('data-url');
-    var title = parent.attr('data-title');
-    notifyShare(service, location, title);
+    notifyShare(service);
   });
   jQuery('#comment').focus(function() {
-    notifyComments(document.location.href, 'comment-area');
+    notifyComments('comment-area');
   });
   jQuery('#author').focus(function() {
-    notifyComments(document.location.href, 'comment-author');
+    notifyComments('comment-author');
   });
   jQuery('#email').focus(function() {
-    notifyComments(document.location.href, 'comment-email');
+    notifyComments('comment-email');
   });
 });    
 
