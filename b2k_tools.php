@@ -614,7 +614,8 @@ function b2k_update_all_counters() {
   }
 
   // Увеличиваем страницу для следующего запуска
-  update_option('b2k_counters_update_page', $page + 1);
+  $page += 1;
+  update_option('b2k_counters_update_page', $page, true);
 }
 add_action('b2k_update_counters_event', 'b2k_update_all_counters');
 
