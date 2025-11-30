@@ -73,6 +73,13 @@ class B2K_Tools {
     // Отключение глобальных стилей
     remove_action('wp_enqueue_scripts', 'wp_enqueu_global_styles');
     remove_action('wp_body_open','wp_global_styles_render_svg_filters');
+
+    // Изменение надписи more
+    add_filter('the_content_more_link', array($this, 'b2k_replace_more_link'), 10, 2);
+  }
+
+  public function b2k_replace_more_link($more_link, $more_link_text) {
+    return str_replace($more_link_text, '<span>Далее</span><span id="loading">...</span>', $more_link);
   }
 
   public function remove_pingback($headers) {
