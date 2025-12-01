@@ -73,6 +73,13 @@ class B2K_Tools {
     // Отключение глобальных стилей
     remove_action('wp_enqueue_scripts', 'wp_enqueu_global_styles');
     remove_action('wp_body_open','wp_global_styles_render_svg_filters');
+
+    // Изменение ссылки Далее
+    add_filter('the_content_more_link', array($this, 'customize_more_link'), 10, 2);
+  }
+
+  public function customize_more_link($more_link_element, $more_link_text) {
+    return '<p>' . str_replace($more_link_text, 'Читать далее...', $more_link_element)  . '</p>';
   }
 
   public function remove_pingback($headers) {
