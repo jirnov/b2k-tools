@@ -73,9 +73,6 @@ class B2K_Tools {
     // Отключение глобальных стилей
     remove_action('wp_enqueue_scripts', 'wp_enqueu_global_styles');
     remove_action('wp_body_open','wp_global_styles_render_svg_filters');
-
-    // Изменение ссылки Далее
-    add_filter('the_content_more_link', array($this, 'customize_more_link'), 10, 2);
   }
 
   public function customize_more_link($more_link_element, $more_link_text) {
@@ -117,6 +114,11 @@ class B2K_Tools {
     );
 
     wp_register_style(
+      'post-expand',
+      plugins_url('css/post-expand.css', B2K_PLUGIN_FILE)
+    );
+
+    wp_register_style(
       'b2k_tools',
       plugins_url('css/b2k_tools.css', B2K_PLUGIN_FILE)
     );
@@ -133,6 +135,7 @@ class B2K_Tools {
     wp_enqueue_style('spoiler');
     wp_enqueue_style('b2k_tools');
     wp_enqueue_style('spoiler-printer');
+    wp_enqueue_style('post-expand');
   }
 
   public function enqueue_scripts() {
@@ -147,6 +150,14 @@ class B2K_Tools {
     wp_register_script(
       'spoiler',
       plugins_url('js/spoiler.js', B2K_PLUGIN_FILE),
+      array('jquery'),
+      false,
+      true
+    );
+
+    wp_register_script(
+      'post-expand',
+      plugins_url('js/post-expand.js', B2K_PLUGIN_FILE),
       array('jquery'),
       false,
       true
@@ -173,6 +184,7 @@ class B2K_Tools {
     );
 
     wp_enqueue_script('spoiler');
+    wp_enqueue_script('post-expand');
     wp_enqueue_script('tools');
 
     if (!is_404()) {
@@ -181,6 +193,9 @@ class B2K_Tools {
   }
 
   public function social_likes($content = '') {
+    if (!is_singular()) {
+      return $content;
+    }
     global $post;
 
     if (!$post) {
@@ -565,6 +580,37 @@ new B2K_Tools();
 global $themecolors;
 $themecolors['bg'] = 'transparent';
 $themecolors['text'] = '000';
+
+function b2k_the_content($post) {
+  if (is_singular()) {
+    the_content();
+    return;
+  }
+
+  $content = apply_filters('the_content', $post->post_content);
+
+  $parts = get_extended($content);
+  $extended = $parts['extended'];
+
+  echo '<div class="post-preview">' . $parts['main'] . '</div>';
+
+  if (empty($extended)) {
+    return;
+  }
+
+  echo '<noscript>';
+  echo '<div>'.$extended.'</div>';
+  echo '<style>.post-body {display: none; }</style>';
+  echo '</noscript>';
+
+  echo '<div class="post-body">';
+  echo '<div class="toggle-buttons">';
+  echo '<div class="toggle-post-body expand expanded">развернуть</div>';
+  echo '<div class="toggle-post-body collapse collapsed">свернуть</div>';
+  echo '</div>';
+  echo '<div class="post-body-content collapsed">'.$extended.'</div>';
+  echo '</div>';
+}
 
 // Внешние функции
 function b2k_is_mobile() {
