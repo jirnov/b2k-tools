@@ -3,24 +3,24 @@
 }
 
 .post-body .expanded {
-  display: inline-block;
+  display: block;
 }
 
-.post-body .toggle-post-body {
+.post-body .toggle-post-body .label {
   color: #cc6633;
   cursor: pointer;
   margin-bottom: 0.5em;
   border-bottom: 1px dashed;
   font-size: 90%;
+  display: inline-block;
 }
 
-.post-body .toggle-post-body.collapse:before {
+.post-body .toggle-post-body .label.collapse:before {
   content: '\25BC';
   margin-right: 5px;
 }
 
-.post-body .toggle-post-body.expand:before {
+.post-body .toggle-post-body .label.expand:before {
   content: '\25B6';
   margin-right: 5px;
 }
-

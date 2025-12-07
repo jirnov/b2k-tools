@@ -99,35 +99,45 @@ class B2K_Tools {
   }
 
   public function enqueue_styles() {
+    $ver = "0.1";
+
     if (!is_admin()) {
       wp_deregister_style('dashicons');
     }
 
     wp_register_style(
       'social-likes',
-      plugins_url('css/social-likes_flat.css', B2K_PLUGIN_FILE)
+      plugins_url('css/social-likes_flat.css', B2K_PLUGIN_FILE),
+      array(),
+      $ver
     );
 
     wp_register_style(
       'spoiler',
-      plugins_url('css/spoiler.css', B2K_PLUGIN_FILE)
+      plugins_url('css/spoiler.css', B2K_PLUGIN_FILE),
+      array(),
+      $ver
     );
 
     wp_register_style(
       'post-expand',
-      plugins_url('css/post-expand.css', B2K_PLUGIN_FILE)
+      plugins_url('css/post-expand.css', B2K_PLUGIN_FILE),
+      array(),
+      $ver
     );
 
     wp_register_style(
       'b2k_tools',
-      plugins_url('css/b2k_tools.css', B2K_PLUGIN_FILE)
+      plugins_url('css/b2k_tools.css', B2K_PLUGIN_FILE),
+      array(),
+      $ver
     );
 
     wp_register_style(
       'spoiler-printer',
       plugins_url('css/spoiler-printer.css', B2K_PLUGIN_FILE),
       array(),
-      null,
+      $ver,
       'print'
     );
 
@@ -605,8 +615,12 @@ function b2k_the_content($post) {
 
   echo '<div class="post-body">';
   echo '<div class="toggle-buttons">';
-  echo '<div class="toggle-post-body expand expanded">развернуть</div>';
-  echo '<div class="toggle-post-body collapse collapsed">свернуть</div>';
+  echo '<div class="toggle-post-body expanded">';
+  echo '<div class="label expand">развернуть</div>';
+  echo '</div>';
+  echo '<div class="toggle-post-body collapsed">';
+  echo '<div class="label collapse">свернуть</div>';
+  echo '</div>';
   echo '</div>';
   echo '<div class="post-body-content collapsed">'.$extended.'</div>';
   echo '</div>';
