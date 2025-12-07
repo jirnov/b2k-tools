@@ -1,5 +1,5 @@
 jQuery('.post-body .toggle-post-body').click(function(event){
-  if (!jQuery(event.target).hasClass("toggle-post-body")) {
+  if (!jQuery(event.target).is('.toggle-post-body, .label')) {
     return;
   }
 
