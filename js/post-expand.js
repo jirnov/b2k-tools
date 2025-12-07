@@ -1,18 +1,10 @@
-jQuery('.toggle-post-body').click(function(event){
-  var nextButton = jQuery(this)
-    .toggleClass('expanded')
-    .toggleClass('collapsed')
-    .siblings('.toggle-post-body');
-
-  nextButton
+jQuery('.post-body .toggle-post-body').click(function(event){
+  const nextBlock = jQuery(this)
     .toggleClass("expanded")
-    .toggleClass("collapsed");
+    .toggleClass("collapsed")
+    .siblings();
 
-  var contentBlock = nextButton
-    .closest(".toggle-buttons")
-    .next('.post-body-content');
-
-  contentBlock
+  nextBlock
     .toggleClass("expanded")
     .toggleClass("collapsed");
 });

@@ -75,10 +75,6 @@ class B2K_Tools {
     remove_action('wp_body_open','wp_global_styles_render_svg_filters');
   }
 
-  public function customize_more_link($more_link_element, $more_link_text) {
-    return '<p>' . str_replace($more_link_text, 'Читать далее...', $more_link_element)  . '</p>';
-  }
-
   public function remove_pingback($headers) {
     unset($headers['X-Pingback']);
     return $headers;
@@ -609,20 +605,18 @@ function b2k_the_content($post) {
   }
 
   echo '<noscript>';
-  echo '<div>'.$extended.'</div>';
-  echo '<style>.post-body {display: none; }</style>';
+  echo $extended;
+  echo '<style>.post-body { display: none; }</style>';
   echo '</noscript>';
 
   echo '<div class="post-body">';
-  echo '<div class="toggle-buttons">';
-  echo '<div class="toggle-post-body expanded">';
-  echo '<div class="label expand">развернуть</div>';
-  echo '</div>';
-  echo '<div class="toggle-post-body collapsed">';
-  echo '<div class="label collapse">свернуть</div>';
-  echo '</div>';
-  echo '</div>';
-  echo '<div class="post-body-content collapsed">'.$extended.'</div>';
+  echo '  <div class="toggle-post-body expand expanded">';
+  echo '    <div class="label expand">развернуть</div>';
+  echo '  </div>';
+  echo '  <div class="toggle-post-body collapsed">';
+  echo '    <div class="label collapse">свернуть</div>';
+  echo '    <div class="content">' . $extended . '</div';
+  echo '  </div>';
   echo '</div>';
 }
 
