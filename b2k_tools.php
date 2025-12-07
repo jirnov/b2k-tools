@@ -95,7 +95,7 @@ class B2K_Tools {
   }
 
   public function enqueue_styles() {
-    $ver = "0.1";
+    $ver = "0.2";
 
     if (!is_admin()) {
       wp_deregister_style('dashicons');
@@ -610,7 +610,7 @@ function b2k_the_content($post) {
   echo '</noscript>';
 
   echo '<div class="post-body">';
-  echo '  <div class="toggle-post-body expand expanded">';
+  echo '  <div class="toggle-post-body expanded">';
   echo '    <div class="label expand">развернуть</div>';
   echo '  </div>';
   echo '  <div class="toggle-post-body collapsed">';
