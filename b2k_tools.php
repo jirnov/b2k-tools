@@ -587,8 +587,10 @@ global $themecolors;
 $themecolors['bg'] = 'transparent';
 $themecolors['text'] = '000';
 
-function b2k_the_content($post) {
-  if (is_singular()) {
+function b2k_the_content() {
+  global $post;
+
+  if (!isset($post) || empty($post)) {
     the_content();
     return;
   }
