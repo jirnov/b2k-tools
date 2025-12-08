@@ -590,7 +590,7 @@ $themecolors['text'] = '000';
 function b2k_the_content() {
   global $post;
 
-  if (!isset($post) || empty($post)) {
+  if (is_singular() || !isset($post) || empty($post)) {
     the_content();
     return;
   }
