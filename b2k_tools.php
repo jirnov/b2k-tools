@@ -137,7 +137,9 @@ class B2K_Tools {
       'print'
     );
 
-    wp_enqueue_style('social-likes');
+    if (is_singular()) {
+      wp_enqueue_style('social-likes');
+    }
     wp_enqueue_style('spoiler');
     wp_enqueue_style('b2k_tools');
     wp_enqueue_style('spoiler-printer');
