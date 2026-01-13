@@ -34,6 +34,9 @@ class B2K_Tools {
     add_filter('wp_default_scripts', array($this, 'remove_jquery_migrate'));
     add_filter('jetpack_implode_frontend_css', '__return_false');
 
+    // Отключить странные комментарии
+    add_filter('preprocess_comment', array($this, 'block_comments_from_homepage_referer'));
+
     // Отключаем визуальный редактор
     add_filter('user_can_richedit', '__return_false', 50);
 
@@ -73,6 +76,16 @@ class B2K_Tools {
     // Отключение глобальных стилей
     remove_action('wp_enqueue_scripts', 'wp_enqueu_global_styles');
     remove_action('wp_body_open','wp_global_styles_render_svg_filters');
+  }
+
+  public function block_comments_from_homepage_referer($commentdata) {
+    $home_url = rtrim(home_url('/'), '/');
+
+    if (isset($_SERVER['HTTP_REFERER']) && rtrim($_SERVER['HTTP_REFERER'], '/') === $home_url) {
+      wp_die('Get the fuck out stupid spammer');
+    }
+
+    return $commentdata;
   }
 
   public function remove_pingback($headers) {
