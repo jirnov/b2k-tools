@@ -40,6 +40,12 @@ class B2K_Tools {
     // Отключаем визуальный редактор
     add_filter('user_can_richedit', '__return_false', 50);
 
+    // Отключаем Warning из ядра в Query Monitor
+    add_filter('qm/collect/php_error_levels', function(array $levels) {
+      $levels['core']['core'] = (E_ALL & ~E_WARNING);
+      return $levels;
+    });
+
     // Стили и скрипты
     add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
     add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
@@ -254,22 +260,11 @@ class B2K_Tools {
 
     if (get_previous_posts_link()) {
       $prev_link = get_pagenum_link($paged - 1);
-    } else if (is_singular()) {
-      $prev_post = get_previous_post(true);
-      if ($prev_post) {
-        $prev_link = get_permalink($prev_post->ID);
-      }
     }
 
     if (get_next_posts_link()) {
       $next_link = get_pagenum_link($paged + 1);
-    } else if (is_singular()) {
-      $next_post = get_next_post(true);
-      if ($next_post) {
-        $next_link = get_permalink($next_post->ID);
-      }
     }
-
     if ($prev_link) {
       echo '<link rel="prev" href="'.esc_url($this->remove_args($prev_link)).'"/>';
     }
@@ -552,52 +547,63 @@ class B2K_Tools {
     $tags = array();
     $tags['description'] = $this->meta_description();
 
-    if (!is_singular()) {
-      $this->print_meta_tags($tags);
+    if ( ! is_singular() ) {
+      $this->print_meta_tags( $tags );
       return;
     }
 
-    $tags['og:title'] = get_the_title();
+    $post_id = get_the_ID();
+
+    $tags['og:title']       = get_the_title();
     $tags['og:description'] = $tags['description'];
-    $tags['og:type'] = "article";
-    $tags['og:url'] = get_the_permalink();
-    $tags['og:locale'] = get_locale();
+    $tags['og:type']        = 'article';
+    $tags['og:url']         = get_the_permalink();
+    $tags['og:locale']      = get_locale();
 
-    $tags['twitter:card'] = "summary";
-    $tags['twitter:title'] = get_the_title();
+    $tags['twitter:card']        = 'summary';
+    $tags['twitter:title']       = get_the_title();
     $tags['twitter:description'] = $tags['description'];
-    $tags['twitter:image'] = '';
+    $tags['twitter:image']       = '';
 
-    $this->print_meta_tags($tags);
+    $this->print_meta_tags( $tags );
 
-    $images = get_posts(array(
-      'post_status'    => null,
-      'post_type'      => 'attachment',
-      'post_parent'    => get_the_ID(),
-      'post_mime_type' => 'image',
-      'order'          => 'ASC'
-    ));
-
-    foreach ($images as $img) {
-      $url = wp_get_attachment_url($img->ID);
-      $this->print_meta_tag('og:image', $url);
+    // --- Изображения: кэшируем запрос ---
+    $image_ids = wp_cache_get( 'og_images_' . $post_id, 'my_theme' );
+    if ( false === $image_ids ) {
+      $image_ids = get_posts( array(
+        'post_status'    => 'inherit',
+        'post_type'      => 'attachment',
+        'post_parent'    => $post_id,
+        'post_mime_type' => 'image',
+        'order'          => 'ASC',
+        'fields'         => 'ids',
+        'posts_per_page' => -1,
+      ) );
+      wp_cache_set( 'og_images_' . $post_id, $image_ids, 'my_theme', HOUR_IN_SECONDS );
     }
 
-    $keywords = get_post_meta(get_the_ID(), 'b2k_post_keywords', true);
-    if (!empty($keywords)) {
-      $this->print_meta_tag('keywords', $keywords);
+    foreach ( $image_ids as $img_id ) {
+      $url = wp_get_attachment_url( $img_id );
+      if ( $url ) {
+        $this->print_meta_tag( 'og:image', $url );
+      }
     }
-    else {
+
+    // --- Ключевые слова ---
+    $keywords = get_post_meta( $post_id, 'b2k_post_keywords', true );
+    if ( ! empty( $keywords ) ) {
+      $this->print_meta_tag( 'keywords', $keywords );
+    } else {
       $postTags = get_the_tags();
-
-      if (!empty($postTags)) {
-        $keywords = array_map(function($tag) {
+      if ( ! empty( $postTags ) && ! is_wp_error( $postTags ) ) {
+        $keywords = array_map( function( $tag ) {
           return $tag->name;
-        }, $postTags);
-        $this->print_meta_tag('keywords', implode(', ', $keywords));
+        }, $postTags );
+        $this->print_meta_tag( 'keywords', implode( ', ', $keywords ) );
       }
     }
   }
+
 }
 
 // Инициализация плагина
