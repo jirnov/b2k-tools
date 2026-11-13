@@ -81,7 +81,7 @@ class B2K_Tools {
   public function block_comments_from_homepage_referer($commentdata) {
     $home_url = rtrim(home_url('/'), '/');
 
-    if (isset($_SERVER['HTTP_REFERER']) && rtrim($_SERVER['HTTP_REFERER'], '/') === $home_url) {
+    if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] == $home_url) {
       wp_die('Get the fuck out stupid spammer');
     }
 
@@ -110,7 +110,7 @@ class B2K_Tools {
   public function enqueue_styles() {
     $ver = "0.2";
 
-    if (!is_admin()) {
+    if (!is_admin_bar_showing()) {
       wp_deregister_style('dashicons');
     }
 
@@ -313,6 +313,9 @@ class B2K_Tools {
   }
 
   public function nofollow_links($content) {
+    if (empty($content)) {
+      return $content;
+    }
     $content = preg_replace_callback(
       '/<a[^>]*href=["|\']([^"|\']*)["|\'][^>]*>([^<]*)<\/a>/i',
       function($m) {
@@ -320,7 +323,10 @@ class B2K_Tools {
         $desc = esc_html($m[2]);
         $nofollow = true;
 
-        $ownDomain = $_SERVER['HTTP_HOST'];
+        $urlparts = wp_parse_url(home_url());
+        $ownDomain = $urlparts['host'];
+
+        /*        $ownDomain = $_SERVER['HTTP_HOST'];*/
         $excludeDomains = array('yowindow.com', 'yowindow.ru');
 
         if (strpos($url, $ownDomain)) {
